@@ -36,11 +36,45 @@ public class KDNode {
 		}
 	}
 	
-	public void add(Point pt) {
+	public boolean add(Point pt) {
+		if(pt.equals(this.pt)) {
+			return false;
+		}
 		
+		if(isBelow(pt)) {
+			if(below != null) {
+				return below.add(pt);
+			} else {
+				below = createChild(pt, true);
+			}
+		} else {
+			if(above != null) {
+				return above.add(pt);
+			} else {
+				above = createChild(pt, false);
+			}
+		}
+		
+		return true;
 	}
 	
 	public KDNode createChild(Point pt, boolean below) {
-		return null;
+		Region newRegion = region.copy();
+		
+		if(orient == Orientation.VERTICAL) {
+			if(below) {
+				newRegion.setXmax(pt.getX());
+			} else {
+				newRegion.setXmin(pt.getX());
+			}
+		} else {
+			if(below) {
+				newRegion.setYmax(pt.getY());
+			} else {
+				newRegion.setYmin(pt.getY());
+			}
+		}
+		
+		return new KDNode(pt, other(orient), newRegion);
 	}
 }

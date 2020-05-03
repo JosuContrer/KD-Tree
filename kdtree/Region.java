@@ -15,6 +15,10 @@ public class Region {
 		this.ymax = ymax;
 	}
 	
+	public Region copy() {
+		return new Region(xmin, xmax, ymin, ymax);
+	}
+	
 	public Region unionPoint(Point pt) {
 		int mx1 = Math.min(xmin, pt.getX());
 		int mx2 = Math.max(xmax, pt.getX());
