@@ -1,5 +1,7 @@
 package kdtree;
 
+import java.util.LinkedList;
+
 public class KDNode {
 
 	public enum Orientation {
@@ -76,5 +78,29 @@ public class KDNode {
 		}
 		
 		return new KDNode(pt, other(orient), newRegion);
+	}
+	
+	public Point getPoint() {
+		return pt;
+	}
+	
+	public KDNode getAbove() {
+		return above;
+	}
+	
+	public KDNode getBelow() {
+		return below;
+	}
+	
+	public void inorder(LinkedList<Point> iter) {
+		if(below != null) {
+			below.inorder(iter);
+		}
+		
+		iter.add(pt);
+		
+		if(above != null) {
+			above.inorder(iter);
+		}
 	}
 }
