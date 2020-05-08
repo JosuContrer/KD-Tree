@@ -28,7 +28,8 @@ public class KDTree implements Iterable<Point> {
 		
 	}
 	
-	private KDNode root;
+	protected KDNode root;
+	protected int depth;
 
 	public KDTree() {
 		root = null;
@@ -61,6 +62,30 @@ public class KDTree implements Iterable<Point> {
 	public boolean contains(Point pt) {
 		return containsInternal(pt, root);
 	}
+	
+	private KDNode getInternal(Point pt, KDNode node) {
+		depth++;
+		if(pt.equals(node.getPoint())) {
+			return node;
+		} else {
+			if(node.isBelow(pt) && node.getBelow() != null) {
+				KDNode belowNode = getInternal(pt, node.getBelow());
+				if(belowNode != null) return belowNode;
+			} 
+			
+			if(!node.isBelow(pt) && node.getAbove() != null) {
+				KDNode aboveNode = getInternal(pt, node.getAbove());
+				if(aboveNode != null) return aboveNode;
+			}
+		}
+		
+		return null;
+	}
+	
+	public KDNode get(Point pt) {
+		depth = 0;
+		return getInternal(pt, root);
+	}
 
 	@Override
 	public Iterator<Point> iterator() {
@@ -69,15 +94,14 @@ public class KDTree implements Iterable<Point> {
 	
 	public static void main(String[] args) {
 		KDTree tree = new KDTree();
-		tree.add(new Point(7, 7));
-		tree.add(new Point(5, 3));
-		tree.add(new Point(2, 5));
-		tree.add(new Point(8, 8));
 		
-		Iterator<Point> iter = tree.iterator();
+		Point[] points = new Point[1000];
 		
-		while(iter.hasNext()) {
-			System.out.println(iter.next());
+		for(int i=0; i<1000; i++) {
+			points[i] = new Point((int) (Math.random() * 1000), (int) (Math.random() * 1000));
 		}
+
+		tree = KDFactory.generate(points);
+		KDUtils.checkBalance(tree);
 	}
 }

@@ -15,10 +15,11 @@ public class KDNode {
 	}
 	
 	private Point pt;
-	private Orientation orient;
-	private Region region;
 	
-	private KDNode above = null, below = null;
+	protected Orientation orient;
+	protected Region region;
+	
+	protected KDNode above = null, below = null;
 	
 	public KDNode(Point pt, Orientation orient, Region region) {
 		this.pt = pt;
