@@ -13,10 +13,11 @@ public class Point {
     public int getX(){
         return this.x;
     }
-
     public int getY(){
         return this.y;
     }
+
+    public double distTo(Point pt) {return Math.sqrt(Math.pow(x - pt.getX(), 2) + Math.pow(y - pt.getY(), 2));}
 
     public String toString() { return "kdtree.Point x: " + this.x + " y: " + this.y; }
 
