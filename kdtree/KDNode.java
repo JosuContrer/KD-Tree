@@ -4,104 +4,71 @@ import java.util.LinkedList;
 
 public class KDNode {
 
-	public enum Orientation {
-		HORIZONTAL,
-		VERTICAL
-	}
-	
-	public static Orientation other(Orientation o) {
-		if(o == Orientation.HORIZONTAL) return Orientation.VERTICAL;
-		return Orientation.HORIZONTAL;
-	}
-	
-	private Point pt;
-	
-	protected Orientation orient;
-	protected Region region;
-	
-	protected KDNode above = null, below = null;
-	
-	public KDNode(Point pt, Orientation orient, Region region) {
-		this.pt = pt;
-		this.orient = orient;
-		this.region = region;
-	}
-	
-	public KDNode(Point pt, Orientation orient) {
-		this(pt, orient, new Region());
-	}
-	
-	public boolean isBelow(Point otherPt) {
-		if(orient == Orientation.HORIZONTAL) {
-			return otherPt.getX() < pt.getX();
-		} else {
-			return otherPt.getY() < pt.getY();
-		}
-	}
-	
-	public boolean add(Point pt) {
-		if(pt.equals(this.pt)) {
-			return false;
-		}
-		
-		if(isBelow(pt)) {
-			if(below != null) {
-				return below.add(pt);
-			} else {
-				below = createChild(pt, true);
-			}
-		} else {
-			if(above != null) {
-				return above.add(pt);
-			} else {
-				above = createChild(pt, false);
-			}
-		}
-		
-		return true;
-	}
-	
-	public KDNode createChild(Point pt, boolean below) {
-		Region newRegion = region.copy();
-		
-		if(orient == Orientation.VERTICAL) {
-			if(below) {
-				newRegion.setXmax(pt.getX());
-			} else {
-				newRegion.setXmin(pt.getX());
-			}
-		} else {
-			if(below) {
-				newRegion.setYmax(pt.getY());
-			} else {
-				newRegion.setYmin(pt.getY());
-			}
-		}
-		
-		return new KDNode(pt, other(orient), newRegion);
-	}
-	
-	public Point getPoint() {
-		return pt;
-	}
-	
-	public KDNode getAbove() {
-		return above;
-	}
-	
-	public KDNode getBelow() {
-		return below;
-	}
-	
-	public void inorder(LinkedList<Point> iter) {
-		if(below != null) {
-			below.inorder(iter);
-		}
-		
-		iter.add(pt);
-		
-		if(above != null) {
-			above.inorder(iter);
-		}
-	}
+	// Orientation of the slice in the region
+    public enum Orientation {
+        HORIZONTAL,
+        VERTICAL
+    }
+
+    public static Orientation other(Orientation o) {
+        if (o == Orientation.HORIZONTAL) return Orientation.VERTICAL;
+        return Orientation.HORIZONTAL;
+    }
+
+    private Point pt;
+
+    protected Orientation orient;
+    protected Region region;
+
+    protected KDNode above = null, below = null;
+
+    public KDNode(Point pt, Orientation orient, Region region) {
+        this.pt = pt;
+        this.orient = orient;
+        this.region = region;
+    }
+
+    public KDNode(Point pt, Orientation orient) {
+        this(pt, orient, new Region());
+    }
+
+    public int compareTo(Point otherPt) {
+        if(pt.equals(otherPt)) return 0;
+
+        if (orient == Orientation.VERTICAL) {
+			return otherPt.getX() < pt.getX()? -1 : 1;
+        } else {
+            return otherPt.getY() < pt.getY()? -1 : 1;
+        }
+    }
+
+    public Point getPoint() {
+        return pt;
+    }
+
+    public KDNode getAbove() {
+        return above;
+    }
+
+    public KDNode getBelow() {
+        return below;
+    }
+
+    public void setAbove(Point pt) {
+		Region r = region.copy();
+
+		if(orient == Orientation.VERTICAL) r.setXmin(pt.getX());
+        else 	r.setYmin(pt.getY());
+
+        this.above = new KDNode(pt, other(this.orient), r);
+    }
+
+    public void setBelow(Point pt) {
+        Region r = region.copy();
+
+        if(orient == Orientation.VERTICAL) r.setXmax(pt.getX());
+        else	r.setYmax(pt.getY());
+
+        this.below = new KDNode(pt, other(this.orient), r);
+    }
 }
