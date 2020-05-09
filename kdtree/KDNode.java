@@ -42,6 +42,11 @@ public class KDNode {
         }
     }
 
+    public double perpendicularDistance(Point otherPt) {
+        if(orient == Orientation.HORIZONTAL)    return Math.abs(otherPt.getY() - this.pt.getY());
+        else                                    return Math.abs(otherPt.getX() - this.pt.getX());
+    }
+
     public Point getPoint() {
         return pt;
     }
