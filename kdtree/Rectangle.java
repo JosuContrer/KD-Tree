@@ -1,19 +1,16 @@
 package kdtree;
 
 public class Rectangle {
-
     private int x;
     private int y;
     private int h;
     private int w;
 
-    public void Rectangle(){}
-
-    public void Rectangle(int xi, int yi, int height, int width){
-        this.x = xi;
-        this.y = yi;
-        this.h = height;
-        this.w = width;
+    public Rectangle(int x, int y, int h, int w){
+        this.x = x;
+        this.y = y;
+        this.h = h;
+        this.w = w;
     }
 
     public int getX(){
@@ -35,5 +32,4 @@ public class Rectangle {
     public String toString(){
         return "kdtree.Rectangle x: " + this.x + " y: " + this.y + " h: " + this.h + " w: " + this.w;
     }
-
 }
