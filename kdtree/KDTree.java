@@ -104,51 +104,35 @@ public class KDTree implements Iterable<Point> {
      */
     public KDNode nearest(Point pt) {
         if (root == null) return null;
-        return nearest(pt, root, Double.POSITIVE_INFINITY);
+        return nearest(pt, root);
     }
 
-    private KDNode nearest(Point pt, KDNode node, double min) {
-        // The closest child on the side of pt and tha min distance is less than all previous perpendiculars
-        KDNode best = nearestInSubtree(pt, node, min);
-        assert best != null; // Best cannot be null as long as the main function is being used
-        double d = pt.distTo(best.getPoint());
-        // Check the perpendicular line
-        if (best.perpendicularDistance(pt) > d) {
-            return best;
+    private KDNode nearest(Point pt, KDNode node) {
+        if(node == null) return null; // Base case
+
+        KDNode best; // This will be used to find the closest node
+        int c = node.compareTo(pt); // Compare the node to the point to find which subtree to search first
+
+        if(c == 0) return node;
+        else best = nearest(pt, c==1? node.above : node.below); // Recursively search subtree
+
+        best = closerNode(pt, node, best); // Compare the node with the closest in its subtree
+
+        // It is possible for a closer node to be in the other subtree
+        if (node.perpendicularDistance(pt) < pt.distTo(best.getPoint())) {
+            // Recursively search the other side
+            best = closerNode(pt, nearest(pt, c==1? node.below : node.above), best);
         }
 
-        int c = best.compareTo(pt);
-        KDNode possible;
-        possible = nearestInSubtree(pt, c==1? best.below : best.above, d); // Check the opposite side of the tree
-
-        if (possible != null) return possible;
         return best;
-
     }
 
-    private KDNode nearestInSubtree(Point pt, KDNode node, double min) {
-        if (node == null) return null;
-        
-        double d = pt.distTo(node.getPoint());
-        int c = node.compareTo(pt);
+    // Null aware helper method to determine the closer of two KDNodes to pt
+    private KDNode closerNode(Point pt, KDNode p1, KDNode p2) {
+        if(p1 == null) return p2;
+        if(p2 == null) return p1;
 
-        if (c == -1) {
-            if (node.below == null) {
-                if (d <= min) return node;
-                else return null;
-            } else {
-                KDNode temp = nearestInSubtree(pt, node.below, Math.min(min, d));
-                return temp == null ? node : temp;
-            }
-        } else if (c == 1) {
-            if (node.above == null) {
-                if (d <= min) return node;
-                else return null;
-            } else {
-                KDNode temp = nearestInSubtree(pt, node.above, Math.min(min, d));
-                return temp == null ? node : temp;
-            }
-        } else return node;
+        return pt.distTo(p1.getPoint()) < pt.distTo(p2.getPoint())? p1 : p2;
     }
 
     /**

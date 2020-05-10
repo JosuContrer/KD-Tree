@@ -64,10 +64,42 @@ public class KDTreeTests {
         assertEquals(expected, tree.inOrder());
     }
 
-    @Test
-    public void nearestInSubtree() {
-        assertEquals(tree.nearest(new Point(1, 1)).getPoint(), new Point(0, 0));
+    void createTestTree() {
+        tree = new KDTree();
+        tree.insert(new Point(0, 0));
+        tree.insert(new Point(-2, 2));
+        tree.insert(new Point(2, 0));
+        tree.insert(new Point(-3, 3));
+        tree.insert(new Point(-2, 0));
+        tree.insert(new Point(2, 1));
+        tree.insert(new Point(4, -3));
+        tree.insert(new Point(-1, -2));
     }
+
+    @Test
+    public void nearestTest1() {
+        createTestTree();
+        assertEquals(tree.nearest(new Point(1, -2)).getPoint(), new Point(-1, -2));
+    }
+
+    @Test
+    public void nearestTest2() {
+        createTestTree();
+        assertEquals(tree.nearest(new Point(1, 2)).getPoint(), new Point(2, 1));
+    }
+
+    @Test
+    public void nearestTest3() {
+        createTestTree();
+        assertEquals(tree.nearest(new Point(-2, 3)).getPoint(), new Point(-3, 3));
+    }
+
+    @Test
+    public void nearestTestContainsPoint() {
+        createTestTree();
+        assertEquals(tree.nearest(new Point(2, 0)).getPoint(), new Point(2, 0));
+    }
+
 
     @Test
     public void KDTreeGeneration() {
