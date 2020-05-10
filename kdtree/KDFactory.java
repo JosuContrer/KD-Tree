@@ -1,9 +1,9 @@
 package kdtree;
 
+import kdtree.KDNode.Orientation;
+
 import java.util.Arrays;
 import java.util.Comparator;
-
-import kdtree.KDNode.Orientation;
 
 public class KDFactory {
 	
@@ -45,7 +45,15 @@ public class KDFactory {
 			return (lo + hi) / 2;
 		}
 	}
-	
+
+	/**
+	 * Creates Node for the points left and right with orientations
+	 * @param points
+	 * @param lo
+	 * @param hi
+	 * @param orient
+	 * @return
+	 */
 	private static KDNode generateSubTree(Point[] points, int lo, int hi, Orientation orient) {
 		if(hi < lo) {
 			return null;
@@ -61,14 +69,16 @@ public class KDFactory {
 			
 			int m = findMedian(points, lo, hi, orient, MedianPolicy.FIRST);
 			KDNode subRoot = new KDNode(points[m], orient);
-			
+
+			// Compute above and below sub-trees
 			subRoot.below = generateSubTree(points, lo, m - 1, KDNode.other(orient));
 			subRoot.above = generateSubTree(points, m + 1, hi, KDNode.other(orient));
 			
 			return subRoot;
 		}
 	}
-	
+
+
 	private static void propagate(KDNode node, Region region) {
 		if(node != null) {
 			node.region = region;

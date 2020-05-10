@@ -2,7 +2,6 @@ package kdtree.tests;
 
 import kdtree.KDFactory;
 import kdtree.KDTree;
-import kdtree.KDUtils;
 import kdtree.Point;
 import org.junit.Test;
 

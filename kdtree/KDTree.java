@@ -1,9 +1,9 @@
 package kdtree;
 
+import kdtree.KDNode.Orientation;
+
 import java.util.Iterator;
 import java.util.LinkedList;
-
-import kdtree.KDNode.Orientation;
 
 public class KDTree implements Iterable<Point> {
 
@@ -118,6 +118,55 @@ public class KDTree implements Iterable<Point> {
         }
 
         return list;
+    }
+
+    /**
+     * Given a region find all points within the given space/region (inclusive)s.
+     *
+     * @param space
+     * @return
+     */
+    public LinkedList<Point> search(Region space){
+
+        LinkedList<Point> resultPoints = new LinkedList<Point>();
+        search(space, root, resultPoints);
+        return resultPoints;
+    }
+
+    // Helper Method
+    public void search(Region space, KDNode parent, LinkedList<Point> points){
+        // Base Case: Compare space to the parents region
+        // If the region is contained by the space get all the points and return
+        if(space.containsRegion(parent.region)){
+            this.drain(parent, points);
+            return;
+        }
+
+        // Space contains point of KDNode
+        if(space.containsPoint(parent.getPoint())){ points.push(parent.getPoint()); }
+
+        // Recursively search through the left and right subtrees
+        // if(space.getXmin() < parent.region.getXmin()) { // TODO: check if this cropping is correct
+            if (parent.below != null) { search(space, parent.below, points); }
+        // }
+
+        // if(space.getXmax() > parent.region.getXmax()) {
+            if (parent.above != null) { search(space, parent.above, points); }
+        // }
+
+    }
+
+    /**
+     * Traversal from left to right of all descendant nodes in the tree rooted at
+     * the given node.
+     *
+     * @param parent
+     * @param points
+     */
+    private void drain(KDNode parent, LinkedList<Point> points){
+        if(parent.below != null){ drain(parent.below, points);}
+        points.push(parent.getPoint());
+        if(parent.above != null){ drain(parent.above, points); }
     }
 
     @Override
