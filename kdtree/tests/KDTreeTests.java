@@ -100,6 +100,21 @@ public class KDTreeTests {
         assertEquals(tree.nearest(new Point(2, 0)).getPoint(), new Point(2, 0));
     }
 
+    @Test
+    public void balanceTest() {
+        tree = new KDTree();
+        tree.insert(new Point(0, 0));
+        tree.insert(new Point(-1, 0));
+        tree.insert(new Point(-1, -1));
+        tree.insert(new Point(-2, -1));
+        tree.insert(new Point(-2, -2));
+        tree.insert(new Point(-3, -2));
+
+        System.out.println(tree.inOrder());
+        tree.balance();
+        System.out.println(tree.inOrder());
+    }
+
 
     @Test
     public void KDTreeGeneration() {
