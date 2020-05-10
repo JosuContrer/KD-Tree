@@ -58,7 +58,7 @@ public class KDFactory {
 		if(hi < lo) {
 			return null;
 		} else if(hi == lo) {
-			return new KDNode(points[lo], orient);
+			return new KDNode(points[lo], KDNode.other(orient));
 		} else {
 			Arrays.sort(points, lo, hi + 1, new Comparator<Point>() {
 				@Override
@@ -68,11 +68,11 @@ public class KDFactory {
 			});
 			
 			int m = findMedian(points, lo, hi, orient, MedianPolicy.FIRST);
-			KDNode subRoot = new KDNode(points[m], orient);
+			KDNode subRoot = new KDNode(points[m], KDNode.other(orient));
 
 			// Compute above and below sub-trees
-			subRoot.below = generateSubTree(points, lo, m - 1, KDNode.other(orient));
-			subRoot.above = generateSubTree(points, m + 1, hi, KDNode.other(orient));
+			subRoot.below = generateSubTree(points, lo, m - 1, orient);
+			subRoot.above = generateSubTree(points, m + 1, hi, orient);
 			
 			return subRoot;
 		}

@@ -1,13 +1,18 @@
 package kdtree.tests;
 
-import kdtree.KDFactory;
-import kdtree.KDTree;
-import kdtree.Point;
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import java.util.LinkedList;
 
-import static org.junit.Assert.*;
+import org.junit.Test;
+
+import kdtree.KDFactory;
+import kdtree.KDTree;
+import kdtree.KDUtils;
+import kdtree.Point;
 
 public class KDTreeTests {
     KDTree tree;
@@ -125,6 +130,6 @@ public class KDTreeTests {
         }
 
         KDTree tree = KDFactory.generate(points);
-        //KDUtils.checkBalance(tree); throws null pointer
+        KDUtils.checkBalance(tree);
     }
 }
