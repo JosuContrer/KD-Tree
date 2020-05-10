@@ -16,6 +16,7 @@ public class KDTree implements Iterable<Point> {
 
     /**
      * Insert a new point into the tree
+     *
      * @param pt point to insert
      * @return if the point could be added (duplicates are not allowed)
      */
@@ -65,9 +66,9 @@ public class KDTree implements Iterable<Point> {
         // Compare the point to the current node
         int c = node.compareTo(pt);
 
-        if (c == 0) 		return true;
-        else if (c == -1) 	return contains(pt, node.below);
-        else 				return contains(pt, node.above);
+        if (c == 0) return true;
+        else if (c == -1) return contains(pt, node.below);
+        else return contains(pt, node.above);
 
     }
 
@@ -90,9 +91,64 @@ public class KDTree implements Iterable<Point> {
         int c = node.compareTo(pt);
         depth++;
 
-        if (c == 0) 		return node;
-        else if (c == -1) 	return get(pt, node.below);
-        else 				return get(pt, node.above);
+        if (c == 0) return node;
+        else if (c == -1) return get(pt, node.below);
+        else return get(pt, node.above);
+    }
+
+    /**
+     * Return the node that represents the closest point in the tree
+     *
+     * @param pt point of interest
+     * @return null if tree is empty
+     */
+    public KDNode nearest(Point pt) {
+        if (root == null) return null;
+        return nearest(pt, root, Double.POSITIVE_INFINITY);
+    }
+
+    private KDNode nearest(Point pt, KDNode node, double min) {
+        // The closest child on the side of pt and tha min distance is less than all previous perpendiculars
+        KDNode best = nearestInSubtree(pt, node, min);
+        assert best != null; // Best cannot be null as long as the main function is being used
+        double d = pt.distTo(best.getPoint());
+        // Check the perpendicular line
+        if (best.perpendicularDistance(pt) > d) {
+            return best;
+        }
+
+        int c = best.compareTo(pt);
+        KDNode possible;
+        possible = nearestInSubtree(pt, c==1? best.below : best.above, d); // Check the opposite side of the tree
+
+        if (possible != null) return possible;
+        return best;
+
+    }
+
+    private KDNode nearestInSubtree(Point pt, KDNode node, double min) {
+        if (node == null) return null;
+        
+        double d = pt.distTo(node.getPoint());
+        int c = node.compareTo(pt);
+
+        if (c == -1) {
+            if (node.below == null) {
+                if (d <= min) return node;
+                else return null;
+            } else {
+                KDNode temp = nearestInSubtree(pt, node.below, Math.min(min, d));
+                return temp == null ? node : temp;
+            }
+        } else if (c == 1) {
+            if (node.above == null) {
+                if (d <= min) return node;
+                else return null;
+            } else {
+                KDNode temp = nearestInSubtree(pt, node.above, Math.min(min, d));
+                return temp == null ? node : temp;
+            }
+        } else return node;
     }
 
     /**

@@ -65,6 +65,11 @@ public class KDTreeTests {
     }
 
     @Test
+    public void nearestInSubtree() {
+        assertEquals(tree.nearest(new Point(1, 1)).getPoint(), new Point(0, 0));
+    }
+
+    @Test
     public void KDTreeGeneration() {
         Point[] points = new Point[1000];
 
