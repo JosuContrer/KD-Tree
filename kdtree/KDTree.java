@@ -30,7 +30,7 @@ public class KDTree implements Iterable<Point> {
         if(nodes.isEmpty()) return null;
 
         int index = (nodes.size() - 1) / 2;
-        nodes.sort((o1, o2) -> j % 2 == 0? o1.getX() - o2.getX() : o1.getY() - o2.getY());
+        nodes.sort((o1, o2) -> j % 2 == 0? Double.compare(o1.getX(), o2.getX()) : Double.compare(o1.getY(), o2.getY()));
 
         while(index > 0 && nextIsEqual(nodes, index, j)) {
             index--;
