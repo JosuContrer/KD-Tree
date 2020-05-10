@@ -71,7 +71,7 @@ public class KDViewer extends JFrame{
 
                 LinkedList<KDNode> kdNodes = kdTree.graphicIterate();
                 for(KDNode n: kdNodes) {
-                    drawGraphics(graphics, n.getPoint().getX(), n.getPoint().getY(), n.getRegion(), n.getOrient());
+                    drawGraphics(graphics, (int) n.getPoint().getX(), (int) n.getPoint().getY(), n.getRegion(), n.getOrient());
                 }
             }
         });
@@ -99,17 +99,18 @@ public class KDViewer extends JFrame{
         Graphics2D gr2 = (Graphics2D) g;
 
         gr2.setColor(new Color(192,89,219));
+        int sideLength = 1000; //TODO: Convert from the doubles to visual integers
 
         if(o == KDNode.Orientation.VERTICAL){
-            Integer y1 = constrainYAxis(r.getYmin());
-            Integer y2 = constrainYAxis(r.getYmax());
+            Integer y1 = constrainYAxis((int) r.getYmin()*sideLength);
+            Integer y2 = constrainYAxis((int) r.getYmax()*sideLength);
             gr2.drawLine(x, y1, x, y2);
 
             printToSerial += "Vertical Line\n  x1: " + x.toString() + " y1: " + y1.toString() + "\n  x2: " + x + " y2: " + y2.toString() + "\n";
         }else{
-            Integer x1 = constrainXAxis(r.getXmin());
+            Integer x1 = constrainXAxis((int) r.getXmin()*sideLength);
             Integer y1 = constrainYAxis(y);
-            Integer x2 = constrainXAxis(r.getXmax());
+            Integer x2 = constrainXAxis((int) r.getXmax()*sideLength);
             Integer y2 = constrainYAxis(y);
             gr2.drawLine(x1, y1, x2, y2);
 
