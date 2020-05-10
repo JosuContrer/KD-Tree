@@ -67,5 +67,7 @@ public class Region {
 	public void setYmax(int ymax) {
 		this.ymax = ymax;
 	}
+
+	public String toString(){ return " Region: xmin-" + xmin + " xmax-" + xmax + " ymin-" + ymin + " ymax-" + ymax; }
 	
 }

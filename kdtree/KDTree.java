@@ -174,4 +174,20 @@ public class KDTree implements Iterable<Point> {
         return this.inOrder().iterator();
     }
 
+    public LinkedList<KDNode> graphicIterate(){
+        LinkedList<KDNode> kdnodes = new LinkedList<KDNode>();
+        graphicIterate(root, kdnodes);
+        return kdnodes;
+    }
+
+    // Helper Method
+    private void graphicIterate(KDNode parent, LinkedList<KDNode> kdnodes){
+        if(parent == null) { return;}
+
+        if(parent.below != null){ graphicIterate(parent.below, kdnodes); }
+        kdnodes.push(parent);
+        if(parent.above != null){ graphicIterate(parent.above, kdnodes); }
+
+    }
+
 }

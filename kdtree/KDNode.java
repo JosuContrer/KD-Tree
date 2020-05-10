@@ -1,7 +1,5 @@
 package kdtree;
 
-import java.util.LinkedList;
-
 public class KDNode {
 
 	// Orientation of the slice in the region
@@ -58,6 +56,10 @@ public class KDNode {
     public KDNode getBelow() {
         return below;
     }
+
+    public Region getRegion() { return  region; }
+
+    public Orientation getOrient(){ return orient; }
 
     public void setAbove(Point pt) {
 		Region r = region.copy();
