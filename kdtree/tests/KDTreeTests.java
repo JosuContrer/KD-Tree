@@ -1,18 +1,11 @@
 package kdtree.tests;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import kdtree.*;
+import org.junit.Test;
 
 import java.util.LinkedList;
 
-import org.junit.Test;
-
-import kdtree.KDFactory;
-import kdtree.KDTree;
-import kdtree.KDUtils;
-import kdtree.Point;
+import static org.junit.Assert.*;
 
 public class KDTreeTests {
     KDTree tree;
@@ -115,9 +108,11 @@ public class KDTreeTests {
         tree.insert(new Point(-2, -2));
         tree.insert(new Point(-3, -2));
 
-        System.out.println(tree.inOrder());
         tree.balance();
-        System.out.println(tree.inOrder());
+        for(Point p : tree.inOrder()) {
+            KDNode n = tree.get(p);
+            System.out.println(n.getPoint());
+        }
     }
 
 

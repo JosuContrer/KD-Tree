@@ -22,25 +22,35 @@ public class KDTree implements Iterable<Point> {
      */
     public void balance() {
         if(root == null) return;
-        Point[] points = inOrder().toArray(new Point[0]);
-        this.root = KDFactory.generate(points);
+        this.root = balance(inOrder(), 0);
+        this.root.updateRegions(new Region());
     }
 
     private KDNode balance(List<Point> nodes, int j) {
-        int index = nodes.size() / 2;
+        if(nodes.isEmpty()) return null;
+
+        int index = (nodes.size() - 1) / 2;
         nodes.sort((o1, o2) -> j % 2 == 0? o1.getX() - o2.getX() : o1.getY() - o2.getY());
 
-        Point m = nodes.get(index);
-        KDNode r = new KDNode(m, j%2==0?Orientation.VERTICAL : Orientation.HORIZONTAL);
+        while(index > 0 && nextIsEqual(nodes, index, j)) {
+            index--;
+        }
 
-        if(nodes.size() > 1)
-            r.setBelow(balance(nodes.subList(0, index), j+1));
+        KDNode r = new KDNode(nodes.get(index), j%2==0? Orientation.VERTICAL : Orientation.HORIZONTAL);
 
-        if(nodes.size() > 2)
-            r.setAbove(balance(nodes.subList(index + 1, nodes.size()), j+1));
+        if(nodes.size() > 1) {
+            r.setAbove(balance(nodes.subList(index + 1, nodes.size()), j + 1));
+            r.setBelow(balance(nodes.subList(0, index), j + 1));
+        }
 
         return r;
     }
+
+    private boolean nextIsEqual(List<Point> nodes, int index, int j) {
+        //if(index==0) return false;
+        return j%2==0? nodes.get(index).getX() == nodes.get(index - 1).getX() : nodes.get(index).getY() == nodes.get(index - 1).getY();
+    }
+
 
     /**
      * Insert a new point into the tree

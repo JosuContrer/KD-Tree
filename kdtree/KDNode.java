@@ -68,7 +68,7 @@ public class KDNode {
 
     protected void setAbove(KDNode above) {
         this.above = above;
-        updateAboveRegion(region);
+        if(above!=null) updateAboveRegion(region);
     }
 
     public void setBelow(Point pt) {
@@ -78,7 +78,7 @@ public class KDNode {
 
     protected void setBelow(KDNode below) {
         this.below = below;
-        updateBelowRegion(region.copy());
+        if(below!=null) updateBelowRegion(region.copy());
     }
 
     /**
