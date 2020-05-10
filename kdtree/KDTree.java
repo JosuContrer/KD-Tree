@@ -16,6 +16,7 @@ public class KDTree implements Iterable<Point> {
 
     /**
      * Insert a new point into the tree
+     *
      * @param pt point to insert
      * @return if the point could be added (duplicates are not allowed)
      */
@@ -65,9 +66,9 @@ public class KDTree implements Iterable<Point> {
         // Compare the point to the current node
         int c = node.compareTo(pt);
 
-        if (c == 0) 		return true;
-        else if (c == -1) 	return contains(pt, node.below);
-        else 				return contains(pt, node.above);
+        if (c == 0) return true;
+        else if (c == -1) return contains(pt, node.below);
+        else return contains(pt, node.above);
 
     }
 
@@ -90,9 +91,48 @@ public class KDTree implements Iterable<Point> {
         int c = node.compareTo(pt);
         depth++;
 
-        if (c == 0) 		return node;
-        else if (c == -1) 	return get(pt, node.below);
-        else 				return get(pt, node.above);
+        if (c == 0) return node;
+        else if (c == -1) return get(pt, node.below);
+        else return get(pt, node.above);
+    }
+
+    /**
+     * Return the node that represents the closest point in the tree
+     *
+     * @param pt point of interest
+     * @return null if tree is empty
+     */
+    public KDNode nearest(Point pt) {
+        if (root == null) return null;
+        return nearest(pt, root);
+    }
+
+    private KDNode nearest(Point pt, KDNode node) {
+        if(node == null) return null; // Base case
+
+        KDNode best; // This will be used to find the closest node
+        int c = node.compareTo(pt); // Compare the node to the point to find which subtree to search first
+
+        if(c == 0) return node;
+        else best = nearest(pt, c==1? node.above : node.below); // Recursively search subtree
+
+        best = closerNode(pt, node, best); // Compare the node with the closest in its subtree
+
+        // It is possible for a closer node to be in the other subtree
+        if (node.perpendicularDistance(pt) < pt.distTo(best.getPoint())) {
+            // Recursively search the other side
+            best = closerNode(pt, nearest(pt, c==1? node.below : node.above), best);
+        }
+
+        return best;
+    }
+
+    // Null aware helper method to determine the closer of two KDNodes to pt
+    private KDNode closerNode(Point pt, KDNode p1, KDNode p2) {
+        if(p1 == null) return p2;
+        if(p2 == null) return p1;
+
+        return pt.distTo(p1.getPoint()) < pt.distTo(p2.getPoint())? p1 : p2;
     }
 
     /**
