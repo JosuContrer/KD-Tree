@@ -28,17 +28,27 @@ public class KDFactory {
 		return j;
 	}
 	
+	/**
+	 * Find the median point for sorting, with the option to look for the first, middle, or last
+	 * if there are multiple identical medians.
+	 * @param points
+	 * @param lo
+	 * @param hi
+	 * @param orient
+	 * @param policy
+	 * @return
+	 */
 	private static int findMedian(Point[] points, int lo, int hi, Orientation orient, MedianPolicy policy) {
 		if(policy == MedianPolicy.FIRST) {
 			int m = (lo + hi) / 2;
-			while(m > lo && points[KDUtils.coord(points[m-1], orient)]  
-						 ==	points[KDUtils.coord(points[m], orient)  ])
+			while(m > lo && KDUtils.coord(points[m-1], orient)  
+						 ==	KDUtils.coord(points[m], orient))
 				m--;
 			return m;
 		} else if(policy == MedianPolicy.LAST) {
 			int m = (lo + hi) / 2;
-			while(m < hi && points[KDUtils.coord(points[m+1], orient)]  
-						 ==	points[KDUtils.coord(points[m], orient)  ])
+			while(m < hi && KDUtils.coord(points[m+1], orient)  
+						 ==	KDUtils.coord(points[m], orient))
 				m++;
 			return m;
 		} else {
@@ -109,14 +119,13 @@ public class KDFactory {
 		}
 	}
 	
-	public static KDTree generate(Point[] points) {
+	public static KDNode generate(Point[] points) {
 		if(points.length == 0) return null;
 		
-		KDTree tree = new KDTree();
-		tree.root = generateSubTree(points, 0, points.length - 1, Orientation.VERTICAL);
-		propagate(tree.root, new Region());
+		KDNode root = generateSubTree(points, 0, points.length - 1, Orientation.VERTICAL);
+		propagate(root, new Region());
 		
-		return tree;
+		return root;
 	}
 	
 }

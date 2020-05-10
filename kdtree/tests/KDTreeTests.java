@@ -129,7 +129,7 @@ public class KDTreeTests {
             points[i] = new Point((int) (Math.random() * 1000), (int) (Math.random() * 1000));
         }
 
-        KDTree tree = KDFactory.generate(points);
+        KDTree tree = new KDTree(KDFactory.generate(points));
         KDUtils.checkBalance(tree);
     }
 }

@@ -12,14 +12,18 @@ public class KDTree implements Iterable<Point> {
     public KDTree() {
         root = null;
     }
+    
+    public KDTree(KDNode root) {
+    	this.root = root;
+    }
 
     /**
      * Optimize the tree to prevent skew
      */
     public void balance() {
         if(root == null) return;
-        this.root = balance(inOrder(), 0);
-        this.root.updateRegions(new Region());
+        Point[] points = inOrder().toArray(new Point[0]);
+        this.root = KDFactory.generate(points);
     }
 
     private KDNode balance(List<Point> nodes, int j) {
