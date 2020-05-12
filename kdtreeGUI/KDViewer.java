@@ -22,6 +22,7 @@ public class KDViewer extends JFrame{
     private JPanel buttonPanel;
     private JPanel mainPanel;
     private JTextPane debugPrintPanel;
+    private JTextArea singleDebugPrint;
     private Graphics graphics;
     private String printToSerial = "";
 
@@ -31,6 +32,7 @@ public class KDViewer extends JFrame{
 
     // KDtree instantiation
     KDTree kdTree = new KDTree();
+    Integer nodeNumber = 0;
 
     public KDViewer(){
 
@@ -48,6 +50,7 @@ public class KDViewer extends JFrame{
                 mainFrame.repaint(); //erase contents of panel
 
                 printToSerial = " ";
+                singleDebugPrint.setText(printToSerial);
                 debugPrintPanel.setText(printToSerial);
             }
         });
@@ -55,7 +58,6 @@ public class KDViewer extends JFrame{
             @Override
             public void actionPerformed(ActionEvent e) {
                 //TODO: implement search or propagate to view
-                printToSerial = " ";
                 debugPrintPanel.setText(printToSerial);
             }
         });
@@ -70,7 +72,10 @@ public class KDViewer extends JFrame{
                 graphics = mainPanel.getGraphics();
 
                 LinkedList<KDNode> kdNodes = kdTree.graphicIterate();
+                printToSerial = " ";
+                nodeNumber = 0;
                 for(KDNode n: kdNodes) {
+                    nodeNumber++;
                     drawGraphics(graphics, n.getPoint().getX(), n.getPoint().getY(), n.getRegion(), n.getOrient());
                 }
             }
@@ -105,7 +110,8 @@ public class KDViewer extends JFrame{
             Integer y2 = constrainYAxis(r.getYmax());
             gr2.drawLine(x, y1, x, y2);
 
-            printToSerial += "Vertical Line\n  x1: " + x.toString() + " y1: " + y1.toString() + "\n  x2: " + x + " y2: " + y2.toString() + "\n";
+            printToSerial += nodeNumber.toString() + ". Vertical Line\n  x1: " + x.toString() + " y1: " + y1.toString() + "\n  x2: " + x + " y2: " + y2.toString() + "\n";
+            singleDebugPrint.setText(nodeNumber.toString() + ". Vertical Line\n  x1: " + x.toString() + " y1: " + y1.toString() + "\n  x2: " + x + " y2: " + y2.toString() + "\n");
         }else{
             Integer x1 = constrainXAxis(r.getXmin());
             Integer y1 = constrainYAxis(y);
@@ -113,11 +119,11 @@ public class KDViewer extends JFrame{
             Integer y2 = constrainYAxis(y);
             gr2.drawLine(x1, y1, x2, y2);
 
-            printToSerial += "Horzontal Line\n  x1: " + x1.toString() + " y1: " + y1.toString() + "\n  x2: " + x2.toString() + " y2: " + y2.toString() + "\n";
+            printToSerial += nodeNumber.toString() + ". Horzontal Line\n  x1: " + x1.toString() + " y1: " + y1.toString() + "\n  x2: " + x2.toString() + " y2: " + y2.toString() + "\n";
+            singleDebugPrint.setText(nodeNumber.toString() + ". Horzontal Line\n  x1: " + x1.toString() + " y1: " + y1.toString() + "\n  x2: " + x2.toString() + " y2: " + y2.toString() + "\n");
         }
 
         printToSerial += "----------------------------\n";
-        debugPrintPanel.setText(printToSerial);
 
         gr2.setColor(new Color(109,219,56));
 
