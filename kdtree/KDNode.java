@@ -114,4 +114,19 @@ public class KDNode {
 
         this.below.region = r;
     }
+
+    public String toString(){
+        Integer x = (int)pt.getX();
+        Integer y = (int)pt.getY();
+
+        if(x == Integer.MAX_VALUE){ x = 11111; }
+        if(x == Integer.MIN_VALUE){ x = 0; }
+        if(y == Integer.MAX_VALUE){ y = 11111; }
+        if(y == Integer.MIN_VALUE){ y = 0; }
+
+        return orient.equals(Orientation.HORIZONTAL) ?
+                "\nOrientation: Horizontal\n  Point: x- " + x.toString() + " y- " + y.toString() + "\n" + region.toString() :
+                "\nOrientation: Vertical\n  Point: x- " + x.toString() + " y- " + y.toString() + "\n" + region.toString();
+
+    }
 }

@@ -71,6 +71,22 @@ public class Region {
 		this.ymax = ymax;
 	}
 
-	public String toString(){ return " Region: xmin-" + xmin + " xmax-" + xmax + " ymin-" + ymin + " ymax-" + ymax; }
+	public String toString(){
+		Integer xMin = (int)this.xmin;
+		Integer xMax = (int)this.xmax;
+		Integer yMin = (int)this.ymin;
+		Integer yMax = (int)this.ymax;
+
+		if(xMin == Integer.MAX_VALUE){ xMin = 11111; }
+		if(xMin == Integer.MIN_VALUE){ xMin = 0; }
+		if(xMax == Integer.MAX_VALUE){ xMax = 11111; }
+		if(xMax == Integer.MIN_VALUE){ xMax = 0; }
+
+		if(yMin == Integer.MAX_VALUE){ yMin = 11111; }
+		if(yMin == Integer.MIN_VALUE){ yMin = 0; }
+		if(yMax == Integer.MAX_VALUE){ yMax = 11111; }
+		if(yMax == Integer.MIN_VALUE){ yMax = 0; }
+		return "  Region: xmin-" + xMin + " xmax-" + xMax +
+				"\n                 ymin-" + yMin + " ymax-" + yMax; }
 	
 }

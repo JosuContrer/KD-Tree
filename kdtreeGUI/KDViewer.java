@@ -3,7 +3,6 @@ package kdtreeGUI;
 import kdtree.KDNode;
 import kdtree.KDTree;
 import kdtree.Point;
-import kdtree.Region;
 
 import javax.swing.*;
 import java.awt.*;
@@ -23,12 +22,17 @@ public class KDViewer extends JFrame{
     private JPanel mainPanel;
     private JTextPane debugPrintPanel;
     private JTextArea singleDebugPrint;
+    private JPanel drawPanel;
     private Graphics graphics;
     private String printToSerial = "";
 
-    //Window Size
-    int widthWindow = 1000;
-    int heightWindow = 1000;
+    // Main Window Size
+    static int widthWindow = 1400;
+    static int heightWindow = 800;
+
+    // Draw Window Size
+    int drawWindowWidth;
+    int drawWindowHeight;
 
     // KDtree instantiation
     KDTree kdTree = new KDTree();
@@ -63,32 +67,50 @@ public class KDViewer extends JFrame{
         });
 
         // Mouse Events
-        mainPanel.addMouseListener(new MouseAdapter() {
+        drawPanel.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
 
+                Integer x = e.getX();
+                Integer y = e.getY();
+
+                System.out.println("Mouse Values\n  x:" + x.toString() + " y: " + y.toString());
+
+                // Insert mouse click values in kd tree
                 Point p = new Point(e.getX(), e.getY());
                 kdTree.insert(p);
-                graphics = mainPanel.getGraphics();
+                KDNode iNode = kdTree.get(p);
+                if(iNode.getOrient() == KDNode.Orientation.HORIZONTAL){
+                    singleDebugPrint.setText("Horizontal Node Added\n  Mouse x: " + x.toString() + " y: " + y.toString() + iNode.toString());
+                }else{
+                    singleDebugPrint.setText("Vertical Node Added\n  x: " + x.toString() + " y: " + y.toString() + iNode.toString());
+                }
+
+                graphics = drawPanel.getGraphics();
 
                 LinkedList<KDNode> kdNodes = kdTree.graphicIterate();
                 printToSerial = " ";
                 nodeNumber = 0;
                 for(KDNode n: kdNodes) {
                     nodeNumber++;
-                    drawGraphics(graphics, (int) n.getPoint().getX(), (int) n.getPoint().getY(), n.getRegion(), n.getOrient());
+                    drawGraphics(graphics, n);
                 }
             }
         });
 
         mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         mainFrame.setVisible(true);
+
+        // Draw Window Size. Has to be done after the GUI is visible
+        drawWindowWidth = drawPanel.getWidth();
+        drawWindowHeight = drawPanel.getHeight();
+        System.out.println("Draw Window Dimensions\n  h:"+ drawWindowHeight + " w:" + drawWindowWidth);
     }
 
     private int constrainYAxis(int y){
 
         if(y <= Integer.MIN_VALUE){ return 0; }
-        else if(y >= Integer.MAX_VALUE){ return heightWindow-200; }
+        else if(y >= Integer.MAX_VALUE){ return drawWindowHeight; }
 
         return y;
     }
@@ -96,44 +118,42 @@ public class KDViewer extends JFrame{
     private int constrainXAxis(int x){
 
         if(x <= Integer.MIN_VALUE){ return 0; }
-        else if(x >= Integer.MAX_VALUE) { return 715;}
+        else if(x >= Integer.MAX_VALUE) { return drawWindowWidth;}
 
         return x;
     }
-    private void drawGraphics(Graphics g, Integer x, Integer y, Region r, KDNode.Orientation o){
+
+    private void drawCircleMouse(Graphics2D gr2, int x, int y, int radius){
+        int scale = 3;
+        gr2.fillOval(x-radius+1,y-radius+1,radius*scale,radius*scale);
+    }
+
+    private void drawGraphics(Graphics g, KDNode kd){
         Graphics2D gr2 = (Graphics2D) g;
+        Integer x = (int)kd.getPoint().getX();
+        Integer y = (int)kd.getPoint().getY();
 
         gr2.setColor(new Color(192,89,219));
-        int sideLength = 1000; //TODO: Convert from the doubles to visual integers
 
-        if(o == KDNode.Orientation.VERTICAL){
-            Integer y1 = constrainYAxis((int) r.getYmin()*sideLength);
-            Integer y2 = constrainYAxis((int) r.getYmax()*sideLength);
-            gr2.drawLine(x, y1, x, y2);
+        if(kd.getOrient() == KDNode.Orientation.VERTICAL){
+            Integer y1 = constrainYAxis((int)kd.getRegion().getYmin());
+            Integer y2 = constrainYAxis((int)kd.getRegion().getYmax());
+            gr2.drawLine(x, y2, x, y1);
 
-            printToSerial += nodeNumber.toString() + ". Vertical Line\n  x1: " + x.toString() + " y1: " + y1.toString() + "\n  x2: " + x + " y2: " + y2.toString() + "\n";
-            singleDebugPrint.setText(nodeNumber.toString() + ". Vertical Line\n  x1: " + x.toString() + " y1: " + y1.toString() + "\n  x2: " + x + " y2: " + y2.toString() + "\n");
+            printToSerial += nodeNumber.toString() + "." + kd.getPoint().toString() + "\n Vertical Line\n  same x: " + x.toString() + "\n  y1: " + y1.toString() + " y2: " + y2.toString() + "\n";
         }else{
-            Integer x1 = constrainXAxis((int) r.getXmin()*sideLength);
-            Integer y1 = constrainYAxis(y);
-            Integer x2 = constrainXAxis((int) r.getXmax()*sideLength);
-            Integer y2 = constrainYAxis(y);
-            gr2.drawLine(x1, y1, x2, y2);
+            Integer x1 = constrainXAxis((int)kd.getRegion().getXmin());
+            Integer x2 = constrainXAxis((int)kd.getRegion().getXmax());
+            gr2.drawLine(x2, y, x1, y);
 
-            printToSerial += nodeNumber.toString() + ". Horzontal Line\n  x1: " + x1.toString() + " y1: " + y1.toString() + "\n  x2: " + x2.toString() + " y2: " + y2.toString() + "\n";
-            singleDebugPrint.setText(nodeNumber.toString() + ". Horzontal Line\n  x1: " + x1.toString() + " y1: " + y1.toString() + "\n  x2: " + x2.toString() + " y2: " + y2.toString() + "\n");
+            printToSerial += nodeNumber.toString() + "." + kd.getPoint().toString() + "\n Horizontal Line\n  same y: " + y.toString() + "\n  x1: " + x1.toString() + " x2: " + x2.toString() + "\n";
         }
 
         printToSerial += "----------------------------\n";
 
         gr2.setColor(new Color(109,219,56));
 
-        drawCircleMouse(gr2,x,y,10);
-    }
-
-
-    private void drawCircleMouse(Graphics2D gr2, int x, int y, int radius){
-        gr2.fillOval(x-radius,y-radius,radius*3,radius*3);
+        drawCircleMouse(gr2,x,y,8);
     }
 
     public static void main(String[] args){
