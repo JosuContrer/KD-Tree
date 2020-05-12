@@ -4,14 +4,14 @@ import kdtree.KDNode.Orientation;
 
 public class KDUtils {
 
-	public static int coord(Point p, Orientation orient) {
+	public static double coord(Point p, Orientation orient) {
 		if(orient == Orientation.HORIZONTAL) return p.getX();
 		else return p.getY();
 	}
 	
 	public static int compareTo(Point p, Point q, Orientation orient) {
-		if(orient == Orientation.HORIZONTAL) return p.getX() - q.getX();
-		else return p.getY() - q.getY();
+		if(orient == Orientation.HORIZONTAL) return Double.compare(p.getX(), q.getX());
+		else return Double.compare(p.getY(), q.getY());
 	}
 	
 	public static void checkBalance(KDTree tree) {

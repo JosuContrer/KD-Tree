@@ -1,8 +1,6 @@
 package kdtree.tests;
 
-import kdtree.KDFactory;
-import kdtree.KDTree;
-import kdtree.Point;
+import kdtree.*;
 import org.junit.Test;
 
 import java.util.LinkedList;
@@ -100,6 +98,23 @@ public class KDTreeTests {
         assertEquals(tree.nearest(new Point(2, 0)).getPoint(), new Point(2, 0));
     }
 
+    @Test
+    public void balanceTest() {
+        tree = new KDTree();
+        tree.insert(new Point(0, 0));
+        tree.insert(new Point(-1, 0));
+        tree.insert(new Point(-1, -1));
+        tree.insert(new Point(-2, -1));
+        tree.insert(new Point(-2, -2));
+        tree.insert(new Point(-3, -2));
+
+        tree.balance();
+        for(Point p : tree.inOrder()) {
+            KDNode n = tree.get(p);
+            System.out.println(n.getPoint());
+        }
+    }
+
 
     @Test
     public void KDTreeGeneration() {
@@ -109,7 +124,7 @@ public class KDTreeTests {
             points[i] = new Point((int) (Math.random() * 1000), (int) (Math.random() * 1000));
         }
 
-        KDTree tree = KDFactory.generate(points);
-        //KDUtils.checkBalance(tree); throws null pointer
+        KDTree tree = new KDTree(KDFactory.generate(points));
+        KDUtils.checkBalance(tree);
     }
 }

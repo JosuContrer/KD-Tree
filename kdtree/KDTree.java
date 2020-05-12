@@ -2,8 +2,7 @@ package kdtree;
 
 import kdtree.KDNode.Orientation;
 
-import java.util.Iterator;
-import java.util.LinkedList;
+import java.util.*;
 
 public class KDTree implements Iterable<Point> {
 
@@ -13,6 +12,45 @@ public class KDTree implements Iterable<Point> {
     public KDTree() {
         root = null;
     }
+    
+    public KDTree(KDNode root) {
+    	this.root = root;
+    }
+
+    /**
+     * Optimize the tree to prevent skew
+     */
+    public void balance() {
+        if(root == null) return;
+        this.root = balance(inOrder(), 0);
+        this.root.updateRegions(new Region());
+    }
+
+    private KDNode balance(List<Point> nodes, int j) {
+        if(nodes.isEmpty()) return null;
+
+        int index = (nodes.size() - 1) / 2;
+        nodes.sort((o1, o2) -> j % 2 == 0? Double.compare(o1.getX(), o2.getX()) : Double.compare(o1.getY(), o2.getY()));
+
+        while(index > 0 && nextIsEqual(nodes, index, j)) {
+            index--;
+        }
+
+        KDNode r = new KDNode(nodes.get(index), j%2==0? Orientation.VERTICAL : Orientation.HORIZONTAL);
+
+        if(nodes.size() > 1) {
+            r.setAbove(balance(nodes.subList(index + 1, nodes.size()), j + 1));
+            r.setBelow(balance(nodes.subList(0, index), j + 1));
+        }
+
+        return r;
+    }
+
+    private boolean nextIsEqual(List<Point> nodes, int index, int j) {
+        //if(index==0) return false;
+        return j%2==0? nodes.get(index).getX() == nodes.get(index - 1).getX() : nodes.get(index).getY() == nodes.get(index - 1).getY();
+    }
+
 
     /**
      * Insert a new point into the tree

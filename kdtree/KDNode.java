@@ -62,20 +62,56 @@ public class KDNode {
     public Orientation getOrient(){ return orient; }
 
     public void setAbove(Point pt) {
-		Region r = region.copy();
+        this.above = new KDNode(pt, other(this.orient));
+        updateAboveRegion(region);
+    }
 
-		if(orient == Orientation.VERTICAL) r.setXmin(pt.getX());
-        else 	r.setYmin(pt.getY());
-
-        this.above = new KDNode(pt, other(this.orient), r);
+    protected void setAbove(KDNode above) {
+        this.above = above;
+        if(above!=null) updateAboveRegion(region);
     }
 
     public void setBelow(Point pt) {
+        this.below = new KDNode(pt, other(this.orient));
+        updateBelowRegion(region.copy());
+    }
+
+    protected void setBelow(KDNode below) {
+        this.below = below;
+        if(below!=null) updateBelowRegion(region.copy());
+    }
+
+    /**
+     * Recursively updates all the regions of the subtree rooted at this node
+     * @param region Region to update to
+     */
+    public void updateRegions(Region region) {
+        this.region = region;
         Region r = region.copy();
 
-        if(orient == Orientation.VERTICAL) r.setXmax(pt.getX());
-        else	r.setYmax(pt.getY());
+        if(above != null) {
+            updateAboveRegion(r);
+            above.updateRegions(r);
+        }
 
-        this.below = new KDNode(pt, other(this.orient), r);
+        if(below != null) {
+            r = region.copy();
+            updateBelowRegion(r);
+            below.updateRegions(r);
+        }
+    }
+
+    private void updateAboveRegion(Region r) {
+        if (orient == Orientation.VERTICAL) r.setXmin(pt.getX());
+        else r.setYmin(pt.getY());
+
+        this.above.region = r;
+    }
+
+    private void updateBelowRegion(Region r) {
+        if (orient == Orientation.VERTICAL) r.setXmax(pt.getX());
+        else r.setYmax(pt.getY());
+
+        this.below.region = r;
     }
 }
