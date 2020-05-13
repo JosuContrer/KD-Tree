@@ -30,25 +30,26 @@ To run the performance test on the KD-tree structure locally run the test file:
 kdtree -> tests -> TimeEval                          
 ```
 
-## KD-Tree Interactive GUI
+#### KD-Tree Interactive GUI
 To run the KD-tree interactive GUI run the following file:
 ```
 kdtreeGUI -> KDViewer -> KDViewer                          
 ```
 
-## GITHUB REPO
+## Deliverables
+#### GITHUB REPO
 In case this code does not compile or run. Pull the latest code from the following github repo:
 ```
 https://github.com/JosuContrer/KD-Tree                         
 ```
 
-## VIDEO LINK
+#### VIDEO LINK
 The link to the video on the summary of our teams implementation and discoveries is provided in the link below:
 ```
-                         
+https://youtu.be/DNuXnstsf1U                       
 ```
 
-## REPORT
+#### REPORT
 The report is included in this zip file as a pdf.
 
 ## Authors
@@ -58,7 +59,7 @@ The report is included in this zip file as a pdf.
 * **Mayank Govilla**
 
 ## Acknowledgments
-* Algorithms in a Nutshell [article]
+* Algorithms in a Nutshell
 * Introduction to KD Trees [article](https://www.geeksforgeeks.org/k-dimensional-tree/)
 * Implementing a KD Tree [article](https://sandipanweb.wordpress.com/2017/09/10/implementing-kd-trees-along-with-the-fast-range-search-nearest-neighbor-search-and-k-nearest-neighbor-search-algorithms-in-2d-with-an-application-in-simulating-the-motion-of-a-flock-of-boids/)
 * An Introductory Tutorial on KD Trees [article](https://www.ri.cmu.edu/pub_files/pub1/moore_andrew_1991_1/moore_andrew_1991_1.pdf)
