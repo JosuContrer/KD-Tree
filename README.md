@@ -20,20 +20,20 @@ This is project uses no external libraries. It runs with all the included librar
 #### KD-Tree Unit Tests
 To validate the correctness of the KD-tree implementation run the unit test file:
 ```
-kdtree -> tests -> KDTreeTests                          
+kdtree -> tests -> KDTreeTests.java                         
 ```
 
 #### KD-Tree Performance Tests
 The performance test results will print out the terminal window when run.
 To run the performance test on the KD-tree structure locally run the test file:
 ```
-kdtree -> tests -> TimeEval                          
+kdtree -> tests -> TimeEval.java                          
 ```
 
 #### KD-Tree Interactive GUI
 To run the KD-tree interactive GUI run the following file:
 ```
-kdtreeGUI -> KDViewer -> KDViewer                          
+kdtreeGUI -> KDViewer -> KDViewer.java                         
 ```
 
 ## Deliverables
